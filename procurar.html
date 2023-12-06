@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurar</title>
+</head>
+
+<body>
+    <h1>Teste Procurar</h1>
+    <a href="registrar.html">REGISTRAR</a>
+    <a href="login.html">LOGIN</a>
+    <form id="searchForm">
+        <label for="token">Token de Acesso:</label>
+        <input type="text" id="token" name="token" required>
+        <br>
+        <button type="button" onclick="search()">Procurar Usuário</button>
+    </form>
+
+    <script>
+        function search() {
+            const token = document.getElementById('token').value;
+
+            fetch('http://localhost:3000/user', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(`Erro ${response.status}: ${errorData.mensagem}`);
+                        });
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Informações do usuário:\n' + JSON.stringify(data, null, 2));
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(`Erro ao procurar usuário ${error.message}`);
+                });
+        }
+    </script>
+</body>
+
+</html>

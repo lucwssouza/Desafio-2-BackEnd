@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar</title>
+</head>
+<body>
+  <h1>Teste Registro</h1>
+  <a href="login.html">LOGIN</a>
+  <a href="procurar.html">PROCURAR</a>
+  <form id="signupForm">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required>
+    <br>
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="senha">Senha:</label>
+    <input type="password" id="senha" name="senha" required>
+    <br>
+    <label for="ddd">DDD:</label>
+    <input type="text" id="ddd" name="ddd" required>
+    <br>
+    <label for="telefone">Telefone:</label>
+    <input type="text" id="telefone" name="telefone" required>
+    <br>
+    <button type="button" onclick="signup()">Sign Up</button>
+  </form>
+
+  <script>
+  function signup() {
+  const nome = document.getElementById('nome').value;
+  const email = document.getElementById('email').value;
+  const senha = document.getElementById('senha').value;
+  const telefone = document.getElementById('telefone').value;
+  const ddd = document.getElementById('ddd').value;
+
+  const data = {
+    nome,
+    email,
+    senha,
+    telefones: [
+      {
+        numero: telefone,
+        ddd,
+      }
+    ]
+  };
+
+  fetch('http://localhost:3000/signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(errorData => {
+        throw new Error(`Erro ${response.status}: ${errorData.mensagem}`);
+      });
+    }
+
+    return response.json();
+  })
+  .then(data => {
+    console.log('Success:', data);
+    alert('Usuário cadastrado com sucesso!');
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert(`Erro ao cadastrar usuário ${error.message}`);
+  });
+}
+
+  </script>
+</body>
+</html>
